@@ -45,12 +45,24 @@ function getRepo(html){
     let repo=searchTool(".px-3 h3 .text-bold");
 
     let topicName=searchTool(".h1").text().trim();
-        let count=0;
+
+    if(repo.length<8){
         for(let i=0;i<repo.length;i++){
             let repoLink=searchTool(repo[i]).attr("href");
             
             let fullLink="https://github.com"+repoLink;
-            count++;
-            issueObj.ans(fullLink,topicName,count);
+            
+            issueObj.ans(fullLink,topicName);
+        }
+    }else{
+        for(let i=0;i<8;i++){
+            let repoLink=searchTool(repo[i]).attr("href");
+            
+            let fullLink="https://github.com"+repoLink;
+            
+            issueObj.ans(fullLink,topicName);
+        }
     }
+
+        
 }

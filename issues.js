@@ -1,5 +1,6 @@
 let fs=require("fs");
 let path=require("path");
+let pdfkit=require("pdfkit");
 
 let request=require("request");
 let cheerio=require("cheerio");
@@ -20,7 +21,7 @@ function getIssues(html){
     let searchTool=cheerio.load(html);
     let issues=searchTool("#issues-tab");
     
-    if(issues.length==0||count>8){
+    if(issues.length==0){
         return;
     }else{
         let fullLink="https://github.com"+searchTool(issues).attr("href");
@@ -52,8 +53,15 @@ function getFinalLinks(html){
     if(fs.existsSync(topicFolderPath)==false){
         fs.mkdirSync(topicFolderPath);
     }
-    let repoFilePath=path.join(topicFolderPath,repoName+".json");
-    fs.writeFileSync(repoFilePath,JSON.stringify(arr));
+    let repoFilePath=path.join(topicFolderPath,repoName+".pdf");
+    //creating pdf files
+    let text=JSON.stringify(arr);
+    let pdfDoc=new pdfkit();
+    pdfDoc.pipe(fs.createWriteStream(repoFilePath));
+    pdfDoc.text(text);
+    pdfDoc.end();
+    //creating json files
+    // fs.writeFileSync(repoFilePath,JSON.stringify(arr));
 }
 return count;
 }
